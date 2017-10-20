@@ -8,9 +8,7 @@ H = AANE_fun(Net,Attri,d,lambda,rho);
 H = AANE_fun(Net,Attri,d,lambda,rho,'Att');  
 H = AANE_fun(Net,Attri,d,lambda,rho,'Att',worknum);  
 
-H is the joint embedding representation of Net and Attri.
-
-Net is the weighted adjacency matrix, and Attri is the attribute information matrix with row denotes nodes.
+H is the joint embedding representation of Net and Attri, where Net is the weighted adjacency matrix, and Attri is the attribute information matrix with row denotes nodes.
 
 
 ## Reference in BibTeX: 
