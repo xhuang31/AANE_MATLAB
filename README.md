@@ -1,19 +1,28 @@
-# Accelerated-Attributed-Network-Embedding
+## Accelerated-Attributed-Network-Embedding
 Accelerated Attributed Network Embedding, SDM 2017
 
 
-# Usage
-## MATLAB
-H = AANE_fun(Net,Attri,d);
-H = AANE_fun(Net,Attri,d,lambda,rho);
-H = AANE_fun(Net,Attri,d,lambda,rho,'Att');
-H = AANE_fun(Net,Attri,d,lambda,rho,'Att',worknum);
+## Code in MATLAB
+H = AANE_fun(Net,Attri,d);  
+H = AANE_fun(Net,Attri,d,lambda,rho);  
+H = AANE_fun(Net,Attri,d,lambda,rho,'Att');  
+H = AANE_fun(Net,Attri,d,lambda,rho,'Att',worknum);  
+
+H is the joint embedding representation of Net and Attri.  
+
+Net      is the weighted adjacency matrix  
+Attri    is the attribute information matrix with row denotes nodes  
+d        is the dimension of the embedding representation  
+lambda   is the regularization parameter  
+rho      is the penalty parameter  
+'Att'    refers to conduct Initialization from the SVD of Attri  
+worknum  is the number of worker used for distribution  
 
 
-# Reference in BibTeX: 
-@conference{Huang-etal17Accelerated,
-Author = {Xiao Huang and Jundong Li and Xia Hu},
-Booktitle = {SIAM International Conference on Data Mining},
-Pages = {633--641},
-Title = {Accelerated Attributed Network Embedding},
-Year = {2017}}
+## Reference in BibTeX: 
+@conference{Huang-etal17Accelerated,  
+Author = {Xiao Huang and Jundong Li and Xia Hu},  
+Booktitle = {SIAM International Conference on Data Mining},  
+Pages = {633--641},  
+Title = {Accelerated Attributed Network Embedding},  
+Year = {2017}}  
