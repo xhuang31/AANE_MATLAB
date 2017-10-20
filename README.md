@@ -16,5 +16,5 @@ H is the joint embedding representation of Net and Attri, where Net is the weigh
 Author = {Xiao Huang and Jundong Li and Xia Hu},  
 Booktitle = {SIAM International Conference on Data Mining},  
 Pages = {633--641},  
-Title = {Accelerated Attributed Network Embedding},  
+Title = {Accelerated Attributed Network Embedding},        
 Year = {2017}}
