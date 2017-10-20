@@ -10,13 +10,8 @@ H = AANE_fun(Net,Attri,d,lambda,rho,'Att',worknum);
 
 H is the joint embedding representation of Net and Attri.  
 
-Net      is the weighted adjacency matrix  
-Attri    is the attribute information matrix with row denotes nodes  
-d        is the dimension of the embedding representation  
-lambda   is the regularization parameter  
-rho      is the penalty parameter  
-'Att'    refers to conduct Initialization from the SVD of Attri  
-worknum  is the number of worker used for distribution  
+ Net  is the weighted adjacency matrix  
+Attri is the attribute information matrix with row denotes nodes
 
 
 ## Reference in BibTeX: 
