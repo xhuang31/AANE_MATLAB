@@ -123,4 +123,4 @@ for iter = 1:maxIter-1
         end
     end
 end
-H=H';
+H=H'; % H is transposed
