@@ -28,7 +28,7 @@ if ~isempty(varargin)
     rho = varargin{2};
     if length(varargin) >= 3 && strcmp(varargin{3},'Att')
         [~,MaxEdges] = sort(sum(Attri),'descend');
-        [H,~] = svds(Attri(:,MaxEdges(1:min(10*d,n))),d);
+        [H,~] = svds(Attri(:,MaxEdges(1:min(10*d,size(Attri,2)))),d);
     else
         [~,MaxEdges] = sort(sum(Net),'descend');
         [H,~] = svds(Net(:,MaxEdges(1:min(10*d,n))),d);
