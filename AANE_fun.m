@@ -96,7 +96,7 @@ for iter = 1:maxIter-1
             end
         end
     end
-    U=U+H-Z; % Update U
+    U = U+H-Z; % Update U
     %% Update H
     XTX = Z*Z'*2; % Transposed for speedup
     for Blocki = 1:ceil(n/Block) % Split nodes into different Blocks
@@ -123,4 +123,4 @@ for iter = 1:maxIter-1
         end
     end
 end
-H=H'; % H is transposed
+H = H'; % H is transposed
