@@ -40,13 +40,13 @@ else
     [~,MaxEdges] = sort(sum(Net),'descend');
     [H,~] = svds(Net(:,MaxEdges(1:min(10*d,n))),d);
 end
-H = H'; % Transpose for speedup
-Z = H;
-Attri = Attri'; % Transpose for speedup
-Attri = bsxfun(@rdivide,Attri,sum(Attri.^2).^.5); % Normalization
-Attri(isnan(Attri)) = 0;
+Z = diag(sum(Attri.^2,2).^-.5); % temporary value
+Z(isinf(Z)) = 0; % temporary value
+Attri = Attri'*Z; % Normalization
 %% First update H
-XTX = Z*Z'*2; % Transpose for speedup
+Z = H'; % Transpose for speedup
+XTX = Z*H*2; % Transpose for speedup
+H = Z; % Transpose for speedup
 for Blocki = 1:ceil(n/Block) % Split nodes into different Blocks
     IndexBlock = 1+Block*(Blocki-1); % First Index for splitting blcks
     LocalIndex = IndexBlock:IndexBlock-1+min(n-IndexBlock+1,Block);
