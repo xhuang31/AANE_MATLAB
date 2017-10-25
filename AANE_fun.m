@@ -3,7 +3,7 @@ function H = AANE_fun(Net,Attri,d,varargin)
 %     H = AANE_fun(Net,Attri,d);
 %     H = AANE_fun(Net,Attri,d,lambda,rho);
 %     H = AANE_fun(Net,Attri,d,lambda,rho,'Att');
-%     H = AANE_fun(Net,Attri,d,lambda,rho,'Att',worknum);
+%     H = AANE_fun(Net,Attri,d,lambda,rho,'Att',splitnum);
 % 
 %         Net   is the weighted adjacency matrix
 %        Attri  is the attribute information matrix with row denotes nodes
@@ -11,10 +11,10 @@ function H = AANE_fun(Net,Attri,d,varargin)
 %       lambda  is the regularization parameter
 %         rho   is the penalty parameter
 %        'Att'  refers to conduct Initialization from the SVD of Attri
-%       worknum is the number of worker used for distribution
+%      splitnum is the number of pieces we split the SA for limited cache
 
 %   Copyright 2017, Xiao Huang and Jundong Li.
-%   $Revision: 1.0.0 $  $Date: 2017/10/18 00:00:00 $
+%   $Revision: 1.0.1 $  $Date: 2017/10/25 00:00:00 $
 
 %% Parameters
 maxIter = 2; % Max num of iteration
@@ -22,7 +22,7 @@ n = size(Net,1); % Total number of nodes
 Net(1:n+1:n^2) = 0;
 lambda = 0.1; % Initial regularization parameter
 rho = 5; % Initial penalty parameter
-Block = min(ceil(n/1),7575); % Treat each 7575 nodes as a block
+splitnum = 1;
 if ~isempty(varargin)
     lambda = varargin{1};
     rho = varargin{2};
@@ -34,12 +34,13 @@ if ~isempty(varargin)
         [H,~] = svds(Net(:,MaxEdges(1:min(10*d,n))),d);
     end
     if length(varargin) >= 4
-        Block = min(ceil(n/varargin{4}),7575); % Treat each 7575 nodes as a block
+        splitnum = varargin{4};
     end
 else
     [~,MaxEdges] = sort(sum(Net),'descend');
     [H,~] = svds(Net(:,MaxEdges(1:min(10*d,n))),d);
 end
+Block = min(ceil(n/splitnum),7575); % Treat each 7575 nodes as a block
 Z = diag(sum(Attri.^2,2).^-.5); % temporary value
 Z(isinf(Z)) = 0; % temporary value
 Attri = Attri'*Z; % Normalization
@@ -47,8 +48,8 @@ Attri = Attri'*Z; % Normalization
 Z = H'; % Transpose for speedup
 XTX = Z*H*2; % Transpose for speedup
 H = Z; % Transpose for speedup
-for Blocki = 1:ceil(n/Block) % Split nodes into different Blocks
-    IndexBlock = 1+Block*(Blocki-1); % First Index for splitting blcks
+for Blocki = 1:splitnum % Split nodes into different Blocks
+    IndexBlock = 1+Block*(Blocki-1); % First Index for splitting blocks
     LocalIndex = IndexBlock:IndexBlock-1+min(n-IndexBlock+1,Block);
     SA = Attri(:,LocalIndex)'*Attri; % Local affinity matrix for Blocki
     sumS = Z*SA'*2;
@@ -73,10 +74,10 @@ U = zeros(d,n);
 for iter = 1:maxIter-1
     %% Update Z
     XTX = H*H'*2;
-    for Blocki = 1:ceil(n/Block) % Split nodes into different Blocks
+    for Blocki = 1:splitnum % Split nodes into different Blocks
         IndexBlock = 1+Block*(Blocki-1); % Index for splitting blcks
         LocalIndex = IndexBlock:IndexBlock-1+min(n-IndexBlock+1,Block);
-        if Affi ~= Blocki
+        if Affi ~= Blocki % check the cached SA is the needed or not
             SA = Attri(:,LocalIndex)'*Attri;
             Affi = Blocki; % Index for affinity matrix
         end
@@ -99,10 +100,10 @@ for iter = 1:maxIter-1
     U = U+H-Z; % Update U
     %% Update H
     XTX = Z*Z'*2; % Transposed for speedup
-    for Blocki = 1:ceil(n/Block) % Split nodes into different Blocks
+    for Blocki = 1:splitnum % Split nodes into different Blocks
         IndexBlock = 1+Block*(Blocki-1); % Index for splitting blcks
         LocalIndex = IndexBlock:IndexBlock-1+min(n-IndexBlock+1,Block);
-        if Affi ~= Blocki
+        if Affi ~= Blocki % check the cached SA is the needed or not
             SA = Attri(:,LocalIndex)'*Attri;
             Affi = Blocki; % Index for affinity matrix
         end
