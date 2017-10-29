@@ -17,7 +17,7 @@ G = Network; % the weighted adjacency matrix
 A = Attributes; % the attribute information matrix with row denotes nodes
 clear Attributes & Network
 Indices = crossvalind('Kfold',length(G),25); % 5-fold cross-validation indices
-Group1 = find(Indices <= 10); % 2 for 10%, 5 for 25%, 10 for 50%, 20 for 100% of training group
+Group1 = find(Indices <= 20); % 2 for 10%, 5 for 25%, 10 for 50%, 20 for 100% of training group
 Group2 = find(Indices >= 21); % test group, test each fold in turns
 n1 = length(Group1); % num of nodes in training group
 n2 = length(Group2);  % num of nodes in test group
@@ -26,7 +26,7 @@ CombA = sparse(A([Group1;Group2],:));
 
 
 %% Accelerated Attributed Network Embedding
-disp('Accelerated Attributed Network Embedding (AANE), 5-fold with 50% of training is used:')
+disp('Accelerated Attributed Network Embedding (AANE), 5-fold with 100% of training is used:')
 tic
 H = AANE_fun(sparse(CombG),sparse(CombA),d,lambda,rho);
 toc
