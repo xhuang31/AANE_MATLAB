@@ -7,7 +7,7 @@ Accelerated Attributed Network Embedding, SDM 2017
 H = AANE_fun(Net,Attri,d);  
 H = AANE_fun(Net,Attri,d,lambda,rho);  
 H = AANE_fun(Net,Attri,d,lambda,rho,'Att');  
-H = AANE_fun(Net,Attri,d,lambda,rho,'Att',worknum);  
+H = AANE_fun(Net,Attri,d,lambda,rho,'Att',splitnum);  
 ```
 
 - H is the joint embedding representation of Net and Attri;
