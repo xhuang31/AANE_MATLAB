@@ -2,43 +2,45 @@ function H = AANE_fun(Net,Attri,d,varargin)
 %Jointly embed Net and Attri into embedding representation H
 %     H = AANE_fun(Net,Attri,d);
 %     H = AANE_fun(Net,Attri,d,lambda,rho);
-%     H = AANE_fun(Net,Attri,d,lambda,rho,'Att');
-%     H = AANE_fun(Net,Attri,d,lambda,rho,'Att',splitnum);
+%     H = AANE_fun(Net,Attri,d,lambda,rho,maxIter);
+%     H = AANE_fun(Net,Attri,d,lambda,rho,maxIter,'Att');
+%     H = AANE_fun(Net,Attri,d,lambda,rho,maxIter,'Att',splitnum);
 % 
 %         Net   is the weighted adjacency matrix
 %        Attri  is the attribute information matrix with row denotes nodes
 %         d     is the dimension of the embedding representation
 %       lambda  is the regularization parameter
 %         rho   is the penalty parameter
+%       maxIter is the maximum number of iteration
 %        'Att'  refers to conduct Initialization from the SVD of Attri
 %      splitnum is the number of pieces we split the SA for limited cache
 
-%   Copyright 2017, Xiao Huang and Jundong Li.
-%   $Revision: 1.0.1 $  $Date: 2017/10/25 00:00:00 $
+%   Copyright 2017 & 2018, Xiao Huang and Jundong Li.
+%   $Revision: 1.0.2 $  $Date: 2018/02/19 00:00:00 $
 
 %% Parameters
 maxIter = 2; % Max num of iteration
 n = size(Net,1); % Total number of nodes
 Net(1:n+1:n^2) = 0;
-lambda = 0.1; % Initial regularization parameter
+lambda = 0.05; % Initial regularization parameter
 rho = 5; % Initial penalty parameter
 splitnum = 1;
-if ~isempty(varargin)
-    lambda = varargin{1};
-    rho = varargin{2};
-    if length(varargin) >= 3 && strcmp(varargin{3},'Att')
-        [~,MaxEdges] = sort(sum(Attri),'descend');
-        [H,~] = svds(Attri(:,MaxEdges(1:min(10*d,size(Attri,2)))),d);
-    else
-        [~,MaxEdges] = sort(sum(Net),'descend');
-        [H,~] = svds(Net(:,MaxEdges(1:min(10*d,n))),d);
-    end
-    if length(varargin) >= 4
-        splitnum = varargin{4};
-    end
+if length(varargin) >= 4 && strcmp(varargin{4},'Att')
+    [~,MaxEdges] = sort(sum(Attri),'descend');
+    [H,~] = svds(Attri(:,MaxEdges(1:min(10*d,size(Attri,2)))),d);
 else
     [~,MaxEdges] = sort(sum(Net),'descend');
     [H,~] = svds(Net(:,MaxEdges(1:min(10*d,n))),d);
+end
+if ~isempty(varargin)
+    lambda = varargin{1};
+    rho = varargin{2};
+    if length(varargin) >= 3
+        maxIter = varargin{3};
+        if length(varargin) >= 5
+            splitnum = varargin{5};
+        end
+    end
 end
 Block = min(ceil(n/splitnum),7575); % Treat each 7575 nodes as a block
 Z = diag(sum(Attri.^2,2).^-.5); % temporary value
