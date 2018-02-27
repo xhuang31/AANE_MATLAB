@@ -43,6 +43,7 @@ if ~isempty(varargin)
     end
 end
 Block = min(ceil(n/splitnum),7575); % Treat each 7575 nodes as a block
+splitnum = ceil(n/Block);
 Z = diag(sum(Attri.^2,2).^-.5); % temporary value
 Z(isinf(Z)) = 0; % temporary value
 Attri = Attri'*Z; % Normalization
