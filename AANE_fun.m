@@ -26,7 +26,7 @@ lambda = 0.05; % Initial regularization parameter
 rho = 5; % Initial penalty parameter
 splitnum = 1;
 if length(varargin) >= 4 && strcmp(varargin{4},'Att')
-    [~,MaxEdges] = sort(sum(Attri),'descend');
+    MaxEdges = randperm(size(Attri,2));
     [H,~] = svds(Attri(:,MaxEdges(1:min(10*d,size(Attri,2)))),d);
 else
     [~,MaxEdges] = sort(sum(Net),'descend');
