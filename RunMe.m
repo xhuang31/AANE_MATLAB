@@ -16,7 +16,7 @@ d = 100; % the dimension of the embedding representation
 G = Network; % the weighted adjacency matrix
 A = Attributes; % the attribute information matrix with row denotes nodes
 clear Attributes & Network
-Indices = crossvalind('Kfold',length(G),25); % 5-fold cross-validation indices
+Indices = randi(25,length(G),1); % 5-fold cross-validation indices
 Group1 = find(Indices <= 20); % 2 for 10%, 5 for 25%, 10 for 50%, 20 for 100% of training group
 Group2 = find(Indices >= 21); % test group, test each fold in turns
 n1 = length(Group1); % num of nodes in training group
